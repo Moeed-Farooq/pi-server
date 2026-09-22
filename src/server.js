@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const ordersRouter = require('./routes/orders')
 const healthRouter = require('./routes/health')
+const { initLed, cleanupLed } = require('./services/ledService')
 
 const app = express()
 
@@ -42,4 +43,13 @@ app.listen(PORT, HOST, () => {
   console.log(`  GET  http://${HOST}:${PORT}/api/health`)
   console.log(`  POST http://${HOST}:${PORT}/api/orders/start`)
   console.log(`  GET  http://${HOST}:${PORT}/api/orders`)
+  initLed()
 })
+
+const shutdown = () => {
+  cleanupLed()
+  process.exit(0)
+}
+
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)

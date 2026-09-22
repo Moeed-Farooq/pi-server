@@ -16,6 +16,53 @@ WHAT YOU NEED
 2. VS Code installed on the Pi (optional but easy)
 3. Node.js 18 or newer on the Pi
 4. Phone and Pi on the same Wi-Fi
+5. (Optional) LED + resistor + breadboard to flash on order received
+
+
+========================================
+LED WIRING (FLASH WHEN ORDER ARRIVES)
+========================================
+
+Default pin: GPIO 17 (BCM) = physical pin 11 on the Pi header.
+
+Parts:
+- 1x LED
+- 1x resistor (220 ohm to 330 ohm recommended)
+- breadboard + jumper wires
+
+How to wire:
+
+  Pi physical pin 11 (GPIO 17)
+       |
+       +---- resistor (220-330 ohm) ---- LED long leg (anode / +)
+                                         LED short leg (cathode / -)
+                                              |
+                                         Pi GND (physical pin 6 or 9)
+
+Simple text diagram:
+
+  [Pi pin 11 / GPIO17] ---> [Resistor] ---> [LED +] [LED -] ---> [Pi GND]
+
+LED tip:
+- Long leg  = + (anode)   -> toward the resistor / GPIO
+- Short leg = - (cathode) -> toward GND
+
+.env settings (already in pi-server/.env):
+
+  LED_GPIO_PIN=17
+  LED_ON_MS=5000
+
+After wiring, reinstall deps and restart:
+
+  npm install
+  npm start
+  # or: pm2 restart pi-server
+
+When the phone sends Start (offline), the LED stays ON for 5 seconds
+and the console will show: [led] ON for 5s
+
+If you use a different GPIO pin, change LED_GPIO_PIN in .env
+(use BCM number, not the physical pin number).
 
 
 ========================================

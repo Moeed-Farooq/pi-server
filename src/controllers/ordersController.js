@@ -1,4 +1,5 @@
 const { appendOrder, readOrders } = require('../storage/orderStorage')
+const { flashOrderReceived } = require('../services/ledService')
 
 const REQUIRED_FIELDS = ['orderId', 'equipmentId']
 
@@ -44,6 +45,9 @@ const startOrder = (req, res) => {
     console.log('====================================================')
 
     const stored = appendOrder(payload)
+
+    // Light the LED for 5 seconds
+    flashOrderReceived()
 
     return res.status(200).json({
       success: true,
