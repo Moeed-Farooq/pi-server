@@ -1,0 +1,20 @@
+{
+  "name": "pi-server",
+  "version": "1.0.0",
+  "description": "Local Raspberry Pi server for receiving offline order/equipment start data from FastCub Store",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
