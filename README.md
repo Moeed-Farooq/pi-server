@@ -52,11 +52,21 @@ LED tip:
   LED_GPIO_PIN=17
   LED_ON_MS=5000
 
-After wiring, reinstall deps and restart:
+After wiring, restart the server:
 
-  npm install
   npm start
   # or: pm2 restart pi-server
+
+You should see:
+  [led] Ready on GPIO 17 (physical pin 11 if pin=17)
+
+If you see "[led] Not available", check pinctrl exists:
+
+  which pinctrl
+  pinctrl set 17 op dh
+  pinctrl set 17 op dl
+
+(First command turns LED ON, second turns it OFF — good wiring test.)
 
 When the phone sends Start (offline), the LED stays ON for 5 seconds
 and the console will show: [led] ON for 5s
