@@ -1,11 +1,14 @@
 {
   "name": "pi-server",
-  "version": "1.0.0",
-  "description": "Local Raspberry Pi server for receiving offline order/equipment start data from FastCub Store",
+  "version": "2.0.0",
+  "description": "Raspberry Pi machine controller for FastCub Store: runs machines offline, tracks online runs, keeps records for Firestore sync",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "dashboard": "node src/dashboard.js",
+    "install-autostart": "bash scripts/install-autostart.sh",
+    "uninstall-autostart": "bash scripts/uninstall-autostart.sh"
   },
   "engines": {
     "node": ">=18"

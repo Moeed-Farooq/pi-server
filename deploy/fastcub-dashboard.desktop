@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=FastCub Dashboard
+Comment=FastCub machine dashboard
+Exec=env FASTCUB_NODE=__NODE__ __DIR__/scripts/start-dashboard.sh
+Terminal=false
+X-GNOME-Autostart-enabled=true
