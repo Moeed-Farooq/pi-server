@@ -1,0 +1,5 @@
+[
+  { "type": "Giant Washer", "machineNum": "1", "gpio": 17, "label": "Giant Washer 1" },
+  { "type": "Giant Dryer", "machineNum": "1", "gpio": 27 },
+  { "equipmentId": "PUT_FIRESTORE_EQUIPMENT_ID_HERE", "gpio": 22 }
+]
