@@ -9,6 +9,7 @@ const MODE = Object.freeze({ OFFLINE: 'offline', ONLINE: 'online' })
 
 const SESSION_ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/
 const MAX_START_SKEW_MS = 10 * 60 * 1000
+const TOKEN_FIELDS = ['shopId', 'orderId', 'serviceId', 'localGeneratedTokenId']
 
 class SessionError extends Error {
   constructor(code, message, httpStatus = 400, details = {}) {
@@ -57,6 +58,12 @@ const createSessionManager = ({
   }
 
   const activeFor = (equipmentId) => store.all().find((session) => isRunning(session) && session.equipmentId === equipmentId) || null
+
+  const tokenOwner = (payload) => {
+    if (!text(payload.orderId) || !text(payload.serviceId) || !text(payload.localGeneratedTokenId)) return null
+    return store.all().find((session) => session.stopReason !== 'gpio_failed'
+      && TOKEN_FIELDS.every((field) => text(session[field]) === text(payload[field]))) || null
+  }
 
   const releaseRelay = (session) => {
     if (session.mode === MODE.OFFLINE && session.relayOn) machines.release(session.gpio)
@@ -142,6 +149,11 @@ const createSessionManager = ({
 
     const existing = store.get(sessionId)
     if (existing) return { session: view(existing), created: false }
+
+    if (mode === MODE.OFFLINE) {
+      const used = tokenOwner(payload)
+      if (used) throw new SessionError('TOKEN_USED', `This token was already used: ${label(used)}`, 409, { session: view(used) })
+    }
 
     const busy = activeFor(text(payload.equipmentId))
     if (busy) {
