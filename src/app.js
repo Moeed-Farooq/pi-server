@@ -25,7 +25,7 @@ const createApp = ({ config, manager, machines, clock, identity, getInternet = (
 
   const requireKey = (req, res, next) => {
     if (!config.apiKey || isLocal(req) || req.get('x-api-key') === config.apiKey) return next()
-    return res.status(401).json({ success: false, code: 'BAD_API_KEY', message: 'Wrong or missing Pi key. Set it in the app: Machine Controller settings.' })
+    return res.status(401).json({ success: false, code: 'BAD_API_KEY', message: 'Wrong or missing gateway key. Set it in the app: Gateway settings, Advanced settings.' })
   }
 
   const ok = (res, data, message = 'OK', status = 200) => res.status(status).json({ success: true, message, data })

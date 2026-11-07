@@ -84,7 +84,7 @@ const render = (status, recent, lastError) => {
   }
 
   const address = status.addresses?.[0]?.address
-  const internet = status.internet === true ? paint('yes', color.green) : status.internet === false ? paint('NO (offline mode)', color.yellow) : '…'
+  const internet = status.internet === true ? paint('yes', color.green) : status.internet === false ? paint('no', color.yellow) : '…'
   const gpio = status.gpio?.ready ? paint(status.gpio.dryRun ? 'dry-run' : 'ready', status.gpio.dryRun ? color.yellow : color.green) : paint('NOT READY', color.red)
   out.push(` App address: ${paint(address ? `${address}:${status.port}` : 'no network!', color.bold, color.cyan)}   Pi: ${status.name} (${status.piId})`)
   out.push(` Internet: ${internet}   GPIO: ${gpio}   Key: ${status.authRequired ? 'required' : 'off'}   Clock: ${status.ntpSynced ? 'NTP' : status.clockOffsetMs ? `phone (${Math.round(status.clockOffsetMs / 1000)}s)` : 'local'}   Up: ${duration(status.uptimeSec * 1000)}`)
@@ -99,8 +99,8 @@ const render = (status, recent, lastError) => {
     active.forEach((session) => {
       const left = paint(pad(duration(session.remainingMs), 11), color.bold, session.remainingMs < 60000 ? color.yellow : color.green)
       const mode = session.mode === 'offline'
-        ? paint(`OFFLINE · Pi relay GPIO ${session.gpio ?? '-'}`, color.cyan)
-        : paint('online · ESP32 (tracked)', color.dim)
+        ? paint(`relay GPIO ${session.gpio ?? '-'}`, color.cyan)
+        : paint('online (tracked)', color.dim)
       out.push(`  ${pad(machineName(session), 22)}${pad(session.orderId || '-', 12)}${pad(`${session.token}m`, 7)}${pad(clockTime(session.startedAt), 7)}${pad(clockTime(session.endsAt), 7)}${left}${pad(progressBar(session), 16)}${mode}`)
       const details = [
         session.customerName && `customer ${session.customerName}`,
@@ -131,11 +131,11 @@ const render = (status, recent, lastError) => {
     const icon = session.status === 'completed' ? paint('✔', color.green) : paint('■', color.yellow)
     const synced = session.mode === 'online'
       ? paint('online', color.dim)
-      : session.syncedAt ? paint('synced to Firestore', color.green) : paint('waiting to sync (app uploads when online)', color.yellow)
+      : session.syncedAt ? paint('synced to Firestore', color.green) : paint('waiting to sync (the app uploads it)', color.yellow)
     out.push(`  ${icon} ${pad(clockTime(session.completedAt), 7)}${pad(session.status, 11)}${pad(machineName(session), 22)}${pad(`order ${session.orderId || '-'}`, 16)}${pad(duration(session.runMs), 9)}${synced}`)
   })
   if (status.unsyncedCount) {
-    out.push(paint(` ${status.unsyncedCount} offline run(s) not in Firestore yet. They upload from the app when it has internet and this Pi in reach.`, color.yellow))
+    out.push(paint(` ${status.unsyncedCount} run(s) not in Firestore yet. The app uploads them when it has internet and this Pi in reach.`, color.yellow))
   }
   out.push(line)
   out.push(paint(' Ctrl+C closes this screen only; machines keep running. Logs: journalctl -u fastcub-pi -f', color.dim))
